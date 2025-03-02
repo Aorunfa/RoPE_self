@@ -47,4 +47,11 @@
 
 ## 应用
 QwenVL2以后使用了这种3D多模态位置编码，特别地，可以兼容图片2D和文本1D的位置编码，论文中将这种编码机制定义为多模态位置编码
+<div align="center">
+  <img src="doc/mrope.png" alt="mrope" width="925" height="289">
+  <p style="font-size: 10px; color: gray;">mrope示意</p>
+</div>
 
+这种位置编码将ROPE解构成三个维度，时间，空间height，空间width。位置标记序号表示为(t, h, w)，t用于定位视频帧号，(h, w)用于定位帧的patch位置。特别地，文本的三个坐标相同，取上一个模态的max(t, h, w)
+
+3D Rope函数控制变量包括3个位置参数t,h,w以及对应的维度参数，同样作用于注意力计算能够满足性质`q[tm,hm,wm]*R(tm,hm,wm) * (k[tn,hn,wn] * R(tn,hn,wn))^T) = q[tm,hm,wm]*R(tm-tn,hm-hn,wm-wn)*k[tn,hn,wn]^T`
